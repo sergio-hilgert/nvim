@@ -299,9 +299,76 @@ local function parse_path(path_string, project_string)
   end
 end
 
--- Function to get the project name based on the environment variable
+-- Function to convert a string to dash-case and lowercase
+local function to_dash_case(str)
+  if not str or str == "" then
+    return str
+  end
+
+  -- Replace hyphens and spaces with dash
+  local result = str:gsub("[-% ]", "-")
+
+  -- Insert dash before uppercase letters and convert to lowercase
+  -- e.g., "MyProjectName" -> "my-project-name"
+  result = result:gsub("(%l)(%u)", "%1-%2")
+  result = result:gsub("(%u)(%u%l)", "%1-%2")
+
+  -- Convert to lowercase
+  result = result:lower()
+
+  -- Remove consecutive dash
+  result = result:gsub("_+", "-")
+
+  -- Remove leading/trailing dash
+  result = result:gsub("^-+", ""):gsub("-+$", "")
+
+  return result
+end
+
+-- Function to find the project root by looking for common markers
+local function find_project_root()
+  local markers = { ".git", "Gemfile", "docker-compose.yml", "docker-compose.yaml", ".ruby-version" }
+  local current_file = vim.fn.expand("%:p:h") -- Get directory of current file
+  local cwd = vim.fn.getcwd()
+
+  -- Start from current file's directory or cwd
+  local search_path = current_file ~= "" and current_file or cwd
+
+  -- Walk up the directory tree looking for markers
+  local path = search_path
+  while path and path ~= "/" and path ~= "" do
+    for _, marker in ipairs(markers) do
+      local marker_path = path .. "/" .. marker
+      if vim.fn.filereadable(marker_path) == 1 or vim.fn.isdirectory(marker_path) == 1 then
+        return path
+      end
+    end
+    -- Move up one directory
+    path = vim.fn.fnamemodify(path, ":h")
+  end
+
+  -- Fallback to cwd if no marker found
+  return cwd
+end
+
+-- Function to get the project name based on the environment variable or root folder
 local function get_project_name()
-  return os.getenv("PROJECT_NAME")
+  -- First, check if PROJECT_NAME env var is set
+  local env_project_name = os.getenv("PROJECT_NAME")
+  if env_project_name and env_project_name ~= "" then
+    return env_project_name
+  end
+
+  -- Otherwise, detect from project root folder name
+  local project_root = find_project_root()
+  local project_name = vim.fn.fnamemodify(project_root, ":t") -- Get the folder name
+
+  if project_name and project_name ~= "" then
+    -- Convert to snake_case and lowercase
+    return to_dash_case(project_name)
+  end
+
+  return nil
 end
 
 local function open_split_terminal_with_auto_close(command)
@@ -359,6 +426,7 @@ local function run_rspec(line_specific)
 
   -- Determine the project name from the environment variable
   local project_name = get_project_name()
+  print(project_name)
   if not project_name then
     print("Could not determine the project name.")
     return
@@ -458,8 +526,14 @@ local function run_db_clear()
   -- Docker Compose command prefix
   local docker_command = "docker compose run --rm " .. project_name .. " "
 
+  local bash_commands = {
+    "RAILS_ENV=development bundle exec rails db:drop db:create db:migrate",
+    "RAILS_ENV=test bundle exec rails db:drop db:create db:migrate",
+    "bundle exec rails parallel:drop",
+    "bundle exec rails parallel:setup",
+  }
   command = docker_command
-    .. 'bash -c "RAILS_ENV=development bundle exec rails db:drop db:create db:migrate && RAILS_ENV=test bundle exec rails db:drop db:create db:migrate && bundle exec rails parallel:drop && bundle exec rails parallel:setup && bundle exec rails parallel:spec"'
+    .. 'bash -c "' .. table.concat(bash_commands, " && ") .. '"'
     .. "; exec bash"
 
   open_split_terminal_with_auto_close(command)
@@ -648,6 +722,8 @@ map("n", "<leader>rbu", ":RunUndercover<CR>", { noremap = true, silent = true, d
 map("n", "<leader>rdb", ":RunDbClear<CR>", { noremap = true, silent = true, desc = "Rails DB: Clear & rebuild" })
 map("n", "<leader>rdm", ":RunDbMigrate<CR>", { noremap = true, silent = true, desc = "Rails DB: Migrate" })
 map("n", "<leader>rdc", ":RunDbCreate<CR>", { noremap = true, silent = true, desc = "Rails DB: Create migration" })
+
+-- Connect to postgres
 map("n", "<leader>rdp", ":RunDbPostgres<CR>", { noremap = true, silent = true, desc = "Rails DB: Postgres console" })
 
 -- Container
