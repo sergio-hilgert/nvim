@@ -1,0 +1,89 @@
+Here are the new features and improved configurations you can add to your Avante setup:
+
+## 1. Updated Model (Recommended)
+Your current model `claude-opus-4-5-20251101` can be updated to the newer `claude-sonnet-4-20250514`:
+
+```lua
+model = "claude-sonnet-4-20250514",  -- Newer, faster model
+```
+
+## 2. Agentic Mode (New Default)
+Enable the new agentic mode for better code generation:
+
+```lua
+opts = {
+  mode = "agentic",  -- Uses tools to automatically generate code
+  -- ...
+}
+```
+
+## 3. Fast Apply (Speed Boost)
+Enable instant code application with Morph:
+
+```lua
+behaviour = {
+  enable_fastapply = true,
+},
+providers = {
+  morph = {
+    model = "morph-v3-large",  -- 98% accuracy, 2500+ tok/sec
+  },
+},
+```
+Requires: `export MORPH_API_KEY="your-key"` from [morphllm.com](https://morphllm.com)
+
+## 4. Web Search Integration
+Add web search capability:
+
+```lua
+web_search_engine = {
+  provider = "tavily",  -- or google, brave, kagi, serpapi
+},
+```
+Requires: `export TAVILY_API_KEY="your-key"`
+
+## 5. RAG Service (Context Enhancement)
+Enable RAG for better code context:
+
+```lua
+rag_service = {
+  enabled = true,
+  host_mount = os.getenv("HOME"),
+  runner = "docker",
+},
+```
+
+## 6. ACP Support (Agent Protocol)
+Integrate with Claude Code, Gemini CLI, or Codex:
+
+```lua
+provider = "claude-code",  -- or "gemini-cli", "codex"
+acp_providers = {
+  ["claude-code"] = {
+    command = "npx",
+    args = { "@zed-industries/claude-code-acp" },
+  },
+},
+```
+
+## 7. Project Instructions
+Create `avante.md` in your project root for project-specific AI instructions.
+
+## 8. Better Behaviour Settings
+```lua
+behaviour = {
+  auto_set_keymaps = true,
+  minimize_diff = true,
+  enable_token_counting = true,
+  auto_add_current_file = true,
+  auto_approve_tool_permissions = true,
+},
+```
+
+## Updated Dependencies (Already in your config)
+Your dependencies are up-to-date. Optional additions:
+- `folke/snacks.nvim` ✓ (already have)
+- `nvim-telescope/telescope.nvim` ✓ (already have)
+
+Would you like me to update your `avante.lua` with any of these configurations?
+
