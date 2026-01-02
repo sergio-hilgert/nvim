@@ -7,7 +7,6 @@ return {
     -- Only enable modules that don't overlap NvChad core (v2.5)
     bigfile = { enabled = true },
     debug = { enabled = true },
-    dim = { enabled = true },
     gh = { enabled = true },
     gitbrowse = { enabled = true },
     lazygit = { enabled = true },
