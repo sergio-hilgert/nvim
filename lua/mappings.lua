@@ -6,6 +6,7 @@ local map = vim.keymap.set
 
 map("n", ";", ":", { desc = "CMD enter command mode" })
 map("i", "jj", "<ESC>")
+map("n", "<leader>th", "", { noremap = true, silent = true })
 
 -- ============================================================================
 -- Snacks keymaps
@@ -61,31 +62,6 @@ end), { desc = "Git: Browse permalink URL", silent = true })
 map("n", "<leader>gC", with_snacks(function(S)
   S.gitbrowse.open({ what = "commit" })
 end), { desc = "Git: Browse commit" })
-
--- picker (Snacks fuzzy finder)
-map("n", "<leader>sp", with_snacks(function(S)
-  S.picker()
-end), { desc = "Snacks: Pickers" })
-
-map("n", "<leader>sf", with_snacks(function(S)
-  S.picker.files()
-end), { desc = "Snacks: Find files" })
-
-map("n", "<leader>sg", with_snacks(function(S)
-  S.picker.grep()
-end), { desc = "Snacks: Grep" })
-
-map("n", "<leader>sb", with_snacks(function(S)
-  S.picker.buffers()
-end), { desc = "Snacks: Buffers" })
-
-map("n", "<leader>sh", with_snacks(function(S)
-  S.picker.help()
-end), { desc = "Snacks: Help" })
-
-map("n", "<leader>sD", with_snacks(function(S)
-  S.picker.diagnostics()
-end), { desc = "Snacks: Diagnostics" })
 
 -- GitHub (requires `gh` + Snacks picker enabled)
 map("n", "<leader>gi", with_snacks(function(S)
@@ -151,28 +127,6 @@ map("n", "[r", with_snacks(function(S)
   S.words.jump(-1)
 end), { desc = "References: prev" })
 
--- toggles (uses Snacks.toggle + which-key integration)
-map("n", "<leader>ud", with_snacks(function(S)
-  S.toggle.dim()
-end), { desc = "Toggle: Dim" })
-
-map("n", "<leader>uw", with_snacks(function(S)
-  S.toggle.words()
-end), { desc = "Toggle: LSP refs (words)" })
-
-map("n", "<leader>us", with_snacks(function(S)
-  S.toggle.scroll()
-end), { desc = "Toggle: Smooth scroll" })
-
-map("n", "<leader>uD", with_snacks(function(S)
-  S.toggle.diagnostics()
-end), { desc = "Toggle: Diagnostics" })
-
--- image
-map("n", "<leader>ih", with_snacks(function(S)
-  S.image.hover()
-end), { desc = "Image: Hover" })
-
 -- debug
 map("n", "<leader>dr", with_snacks(function(S)
   S.debug.run()
@@ -194,73 +148,6 @@ map("n", "<leader>dm", with_snacks(function(S)
   S.debug.metrics()
 end), { desc = "Debug: Metrics" })
 
--- win/layout demo
-local snacks_layout_demo
-
-map("n", "<leader>wn", with_snacks(function(S)
-  local file = vim.api.nvim_get_runtime_file("doc/news.txt", false)[1]
-  S.win({
-    file = file,
-    title = "Neovim News",
-    width = 0.8,
-    height = 0.8,
-    enter = true,
-    border = "rounded",
-    wo = { wrap = false },
-  })
-end), { desc = "Snacks.win: Neovim news" })
-
-map("n", "<leader>wl", with_snacks(function(S)
-  if snacks_layout_demo and snacks_layout_demo:valid() then
-    snacks_layout_demo:close()
-    snacks_layout_demo = nil
-    return
-  end
-
-  local news = vim.api.nvim_get_runtime_file("doc/news.txt", false)[1]
-
-  local left = S.win({
-    title = "Scratch",
-    show = false,
-    border = "rounded",
-    minimal = false,
-    bo = { buftype = "", bufhidden = "hide", swapfile = false },
-    text = {
-      "# Scratch",
-      "",
-      "- Use <leader>. to toggle your persistent scratch buffer",
-      "- Use <leader>S to select scratch buffers",
-    },
-  })
-
-  local right = S.win({
-    title = "News",
-    show = false,
-    border = "rounded",
-    wo = { wrap = false },
-    file = news,
-  })
-
-  snacks_layout_demo = S.layout.new({
-    wins = { left = left, right = right },
-    layout = {
-      box = "horizontal",
-      width = 0.9,
-      height = 0.8,
-      border = false,
-      { win = "left", width = 0.35 },
-      { win = "right" },
-    },
-  })
-end), { desc = "Snacks.layout: Toggle demo" })
-
-map("n", "<leader>wM", with_snacks(function(_)
-  if snacks_layout_demo and snacks_layout_demo:valid() then
-    snacks_layout_demo:maximize()
-  else
-    vim.notify("Open the layout first with <leader>wl")
-  end
-end), { desc = "Snacks.layout: Maximize demo" })
 
 -- ============================================================================
 -- Ruby/Rails/RSpec/Docker Helper Functions
@@ -728,3 +615,21 @@ map("n", "<leader>rdp", ":RunDbPostgres<CR>", { noremap = true, silent = true, d
 
 -- Container
 map("n", "<leader>rh", ":RunContainerBash<CR>", { noremap = true, silent = true, desc = "Docker: Container bash" })
+
+map("n", "<leader>th", "<cmd>ToggleTerm direction=horizontal<CR>", { noremap = true, silent = true, desc = "Terminal: Horizontal" })
+
+
+-- lazydocker using toggleterm (closes automatically when you quit)
+local lazydocker = nil
+map("n", "<leader>td", function()
+  if not lazydocker then
+    local Terminal = require("toggleterm.terminal").Terminal
+    lazydocker = Terminal:new({
+      cmd = "lazydocker",
+      direction = "float",
+      hidden = true,
+      close_on_exit = true,
+    })
+  end
+  lazydocker:toggle()
+end, { desc = "Docker: LazyDocker" })

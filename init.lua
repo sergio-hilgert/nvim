@@ -41,10 +41,11 @@ end)
 -- ============================================================================
 
 vim.wo.relativenumber = false
-vim.o.autoread = true
-vim.opt.termguicolors = true
-vim.o.updatetime = 1000
 
+-- vim.o.autoread = true
+-- vim.o.updatetime = 1000
+
+vim.opt.termguicolors = true
 vim.opt.list = true
 vim.opt.listchars = {
   space = "·",
@@ -74,10 +75,10 @@ vim.g.rails_projections = {
 -- Terminal Autocommands
 -- ============================================================================
 
-vim.cmd([[
-  autocmd TermOpen * startinsert
-]])
-
-vim.cmd([[
-  autocmd TermClose * quit
-]])
+-- vim.cmd([[
+--   autocmd TermOpen * startinsert
+-- ]])
+--
+-- vim.cmd([[
+--   autocmd TermClose * quit
+-- ]])
