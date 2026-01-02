@@ -6,7 +6,7 @@
 local M = {}
 
 M.base46 = {
-	theme = "jellybeans",
+	theme = "github_dark",
 
 	-- hl_override = {
 	-- 	Comment = { italic = true },
@@ -15,10 +15,9 @@ M.base46 = {
 }
 
 -- M.nvdash = { load_on_startup = true }
--- M.ui = {
---       tabufline = {
---          lazyload = false
---      }
---}
+M.ui = {
+  telescope = { style = "bordered" }
+}
+--
 
 return M

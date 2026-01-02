@@ -8,6 +8,9 @@ map("n", ";", ":", { desc = "CMD enter command mode" })
 map("i", "jj", "<ESC>")
 map("n", "<leader>th", "", { noremap = true, silent = true })
 
+-- NvChad theme picker
+map("n", "<leader>te", "<cmd>Telescope themes<CR>", { desc = "Theme: Pick theme" })
+
 -- ============================================================================
 -- Snacks keymaps
 -- ============================================================================
@@ -260,47 +263,43 @@ end
 
 local function open_split_terminal_with_auto_close(command)
   print(command)
-  -- Save the current window ID
-  local original_win = vim.api.nvim_get_current_win()
-
-  -- Open the terminal in a split
-  vim.cmd("split | terminal " .. command)
-
-  -- Get the terminal buffer number
-  local term_buf = vim.api.nvim_get_current_buf()
-
-  -- Set an autocommand to close the terminal buffer and restore focus to the original window
-  vim.api.nvim_create_autocmd("TermClose", {
-    buffer = term_buf, -- Apply to the current terminal buffer only
-    callback = function()
-      -- Close the terminal buffer
-      vim.api.nvim_buf_delete(term_buf, { force = true })
-      -- Restore focus to the original window
-      vim.api.nvim_set_current_win(original_win)
+  local Terminal = require("toggleterm.terminal").Terminal
+  local term = Terminal:new({
+    cmd = command,
+    direction = "horizontal",
+    close_on_exit = true,
+    on_exit = function()
+      vim.schedule(function()
+        vim.cmd("stopinsert")
+      end)
     end,
   })
-
-  -- Optionally, enter insert mode in the terminal automatically
-  vim.cmd("startinsert")
+  term:toggle()
 end
 
 local function open_newbuff_terminal_with_auto_close(command)
   print(command)
-  vim.cmd("enew | terminal " .. command)
-
-  -- Get the terminal buffer number
-  local term_buf = vim.api.nvim_get_current_buf()
-
-  -- Set an autocommand to close the terminal buffer and restore focus to the original window
-  vim.api.nvim_create_autocmd("TermClose", {
-    buffer = term_buf, -- Apply to the current terminal buffer only
-    callback = function()
-      vim.api.nvim_buf_delete(term_buf, { force = true })
+  local Terminal = require("toggleterm.terminal").Terminal
+  local term = Terminal:new({
+    cmd = command,
+    direction = "float",
+    close_on_exit = true,
+    float_opts = {
+      border = "rounded",
+      width = function()
+        return math.floor(vim.o.columns * 0.9)
+      end,
+      height = function()
+        return math.floor(vim.o.lines * 0.85)
+      end,
+    },
+    on_exit = function()
+      vim.schedule(function()
+        vim.cmd("stopinsert")
+      end)
     end,
   })
-
-  -- Optionally, enter insert mode in the terminal automatically
-  vim.cmd("startinsert")
+  term:toggle()
 end
 
 -- Function to run RSpec for the current file and line inside Docker
@@ -529,14 +528,22 @@ local function run_rspec_on_path(test_path)
   local docker_command = "docker compose run --rm " .. project_name .. " "
   local command = docker_command .. "bundle exec rspec " .. docker_file .. "; exec bash"
 
-  open_newbuff_terminal_with_auto_close(command)
+  open_split_terminal_with_auto_close(command)
 end
 
 -- Function to run RSpec tests on the current directory
 local function run_rspec_on_current_directory()
-  local directory_path = require("nvim-tree.lib").get_node_at_cursor().absolute_path
-  -- Check if the path is a directory or a specific file should be checked
-  -- You can modify this logic based on specific requirements (e.g., check if it's a test file directory)
+  local api = require("nvim-tree.api")
+  local node = api.tree.get_node_under_cursor()
+
+  if not node then
+    print("No node selected in nvim-tree")
+    return
+  end
+
+  local directory_path = node.absolute_path
+
+  -- Check if the path is a directory
   if vim.fn.isdirectory(directory_path) == 1 then
     run_rspec_on_path(directory_path)
   else
@@ -633,3 +640,4 @@ map("n", "<leader>td", function()
   end
   lazydocker:toggle()
 end, { desc = "Docker: LazyDocker" })
+

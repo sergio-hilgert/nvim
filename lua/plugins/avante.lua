@@ -25,7 +25,7 @@ return {
         context_window = 200000,
         extra_request_body = {
           temperature = 0.45,
-          max_tokens = 64000,
+          max_tokens = 8192,
         },
       },
     },
