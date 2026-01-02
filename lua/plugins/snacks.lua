@@ -2,9 +2,7 @@ return {
   "folke/snacks.nvim",
   priority = 1000,
   lazy = false,
-  ---@type snacks.Config
   opts = {
-    -- Only enable modules that don't overlap NvChad core (v2.5)
     bigfile = { enabled = true },
     debug = { enabled = true },
     gh = { enabled = true },
