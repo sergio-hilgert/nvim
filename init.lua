@@ -37,32 +37,6 @@ vim.schedule(function()
 end)
 
 -- ============================================================================
--- Vim Options
--- ============================================================================
-
-vim.wo.relativenumber = false
-
--- vim.o.autoread = true
--- vim.o.updatetime = 1000
-
-vim.opt.termguicolors = true
-vim.opt.list = true
-vim.opt.listchars = {
-  space = "·",
-  tab = "→ ",
-  trail = "•",
-  extends = "⟩",
-  precedes = "⟨",
-}
-vim.opt.wildignorecase = true
-vim.opt.ignorecase = true
-vim.opt.smartcase = true
-
-vim.wo.foldmethod = "expr"
-vim.wo.foldexpr = "nvim_treesitter#foldexpr()"
-vim.wo.foldlevel = 99   -- open all folds by default
-
--- ============================================================================
 -- Rails Projections (for vim-rails alternate file navigation)
 -- ============================================================================
 
@@ -74,6 +48,19 @@ vim.g.rails_projections = {
     alternate = "app/controllers/{}_controller.rb",
   },
 }
+
+-- ============================================================================
+-- Ruby Indentation Fix
+-- ============================================================================
+-- Use vim-ruby's indentation instead of treesitter for Ruby files
+-- This provides better support for method chaining indentation
+vim.api.nvim_create_autocmd("FileType", {
+  pattern = { "ruby", "eruby" },
+  callback = function()
+    -- Disable treesitter indentation for Ruby, use vim-ruby instead
+    vim.bo.indentexpr = "GetRubyIndent()"
+  end,
+})
 
 -- ============================================================================
 -- Terminal Autocommands

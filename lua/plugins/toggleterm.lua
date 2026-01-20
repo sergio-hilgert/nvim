@@ -49,6 +49,15 @@ return {
     winbar = {
       enabled = false,
     },
+    -- Custom function to set terminal keymaps
+    on_open = function(term)
+      -- Easy escape from terminal mode with Esc or jk
+      vim.keymap.set("t", "<Esc>", [[<C-\><C-n>]], { buffer = term.bufnr, desc = "Exit terminal mode" })
+      -- Navigate away from terminal while it's running
+      vim.keymap.set("t", "<C-h>", [[<C-\><C-n><C-w>h]], { buffer = term.bufnr, desc = "Move to left window" })
+      vim.keymap.set("t", "<C-j>", [[<C-\><C-n><C-w>j]], { buffer = term.bufnr, desc = "Move to bottom window" })
+      vim.keymap.set("t", "<C-k>", [[<C-\><C-n><C-w>k]], { buffer = term.bufnr, desc = "Move to top window" })
+      vim.keymap.set("t", "<C-l>", [[<C-\><C-n><C-w>l]], { buffer = term.bufnr, desc = "Move to right window" })
+    end,
   },
 }
-

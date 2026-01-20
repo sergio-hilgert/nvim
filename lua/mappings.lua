@@ -130,28 +130,6 @@ map("n", "[r", with_snacks(function(S)
   S.words.jump(-1)
 end), { desc = "References: prev" })
 
--- debug
-map("n", "<leader>dr", with_snacks(function(S)
-  S.debug.run()
-end), { desc = "Debug: Run buffer/range" })
-
-map("n", "<leader>db", with_snacks(function(S)
-  S.debug.backtrace()
-end), { desc = "Debug: Backtrace" })
-
-map("n", "<leader>di", with_snacks(function(S)
-  S.debug.inspect({
-    buf = vim.api.nvim_get_current_buf(),
-    ft = vim.bo.filetype,
-    cwd = vim.fn.getcwd(),
-  })
-end), { desc = "Debug: Inspect context" })
-
-map("n", "<leader>dm", with_snacks(function(S)
-  S.debug.metrics()
-end), { desc = "Debug: Metrics" })
-
-
 -- ============================================================================
 -- Ruby/Rails/RSpec/Docker Helper Functions
 -- ============================================================================
@@ -327,16 +305,16 @@ local function run_rspec(line_specific)
     local project_root = parse_path(file, project_name)
     local docker_file = "/app" .. project_root
     if line_specific then
-      command = docker_command .. "bundle exec rspec " .. docker_file .. ":" .. line .. "; exec bash"
+      command = docker_command .. "bundle exec rspec " .. docker_file .. ":" .. line .. "; exec zsh"
     else
-      command = docker_command .. "bundle exec rspec " .. docker_file .. "; exec bash"
+      command = docker_command .. "bundle exec rspec " .. docker_file .. "; exec zsh"
     end
   elseif file_ext == "rb" then
     -- If it's a Ruby file, build the path to the corresponding RSpec file
     local rspec_file = ruby_to_rspec_path(file)
     local project_root = parse_path(rspec_file, project_name)
     local docker_file = "/app" .. project_root
-    command = docker_command .. "bundle exec rspec " .. docker_file .. "; exec bash"
+    command = docker_command .. "bundle exec rspec " .. docker_file .. "; exec zsh"
   else
     print("Current file is not a Ruby or RSpec file.")
     return
@@ -358,7 +336,7 @@ local function run_rspec_parallel()
   -- Docker Compose command prefix
   local docker_command = "docker compose run --rm " .. project_name .. " "
 
-  command = docker_command .. 'bash -c "bundle exec rails parallel:spec"' .. "; exec bash"
+  command = docker_command .. 'zsh -c "bundle exec rails parallel:spec"' .. "; exec zsh"
 
   open_split_terminal_with_auto_close(command)
 end
@@ -376,7 +354,7 @@ local function run_rubocop()
   -- Docker Compose command prefix
   local docker_command = "docker compose run --rm " .. project_name .. " "
 
-  command = docker_command .. "bundle exec rubocop -A" .. "; exec bash"
+  command = docker_command .. "bundle exec rubocop -A" .. "; exec zsh"
 
   open_split_terminal_with_auto_close(command)
 end
@@ -394,7 +372,7 @@ local function run_undercover()
   -- Docker Compose command prefix
   local docker_command = "docker compose run --rm " .. project_name .. " "
 
-  command = docker_command .. "bundle exec undercover -c origin/main" .. "; exec bash"
+  command = docker_command .. "bundle exec undercover -c origin/main" .. "; exec zsh"
 
   open_split_terminal_with_auto_close(command)
 end
@@ -412,15 +390,15 @@ local function run_db_clear()
   -- Docker Compose command prefix
   local docker_command = "docker compose run --rm " .. project_name .. " "
 
-  local bash_commands = {
+  local zsh_commands = {
     "RAILS_ENV=development bundle exec rails db:drop db:create db:migrate",
     "RAILS_ENV=test bundle exec rails db:drop db:create db:migrate",
     "bundle exec rails parallel:drop",
     "bundle exec rails parallel:setup",
   }
   command = docker_command
-    .. 'bash -c "' .. table.concat(bash_commands, " && ") .. '"'
-    .. "; exec bash"
+    .. 'zsh -c "' .. table.concat(zsh_commands, " && ") .. '"'
+    .. "; exec zsh"
 
   open_split_terminal_with_auto_close(command)
 end
@@ -439,7 +417,7 @@ local function run_db_migrate()
   local docker_command = "docker compose run --rm " .. project_name .. " "
 
   command = docker_command
-    .. 'bash -c "RAILS_ENV=development bundle exec rails db:migrate && RAILS_ENV=test bundle exec rails db:migrate"'
+    .. 'zsh -c "RAILS_ENV=development bundle exec rails db:migrate && RAILS_ENV=test bundle exec rails db:migrate"'
 
   open_split_terminal_with_auto_close(command)
 end
@@ -458,7 +436,7 @@ local function run_db_postgres()
   open_split_terminal_with_auto_close(command)
 end
 
-local function run_container_bash()
+local function run_container_zsh()
   -- Determine the project name from the environment variable
   local project_name = get_project_name()
   if not project_name then
@@ -467,7 +445,7 @@ local function run_container_bash()
   end
 
   local docker_command = "docker compose exec " .. project_name .. " "
-  local command = docker_command .. "bash"
+  local command = docker_command .. "zsh"
 
   open_split_terminal_with_auto_close(command)
 end
@@ -490,7 +468,7 @@ local function run_db_create(migration_name)
   -- Docker Compose command prefix
   local docker_command = "docker compose run --rm " .. project_name .. " "
 
-  command = docker_command .. 'bash -c "bundle exec rails g migration ' .. migration_name .. '"'
+  command = docker_command .. 'zsh -c "bundle exec rails g migration ' .. migration_name .. '"'
 
   open_split_terminal_with_auto_close(command)
 end
@@ -526,7 +504,7 @@ local function run_rspec_on_path(test_path)
 
   -- Docker Compose command to run RSpec
   local docker_command = "docker compose run --rm " .. project_name .. " "
-  local command = docker_command .. "bundle exec rspec " .. docker_file .. "; exec bash"
+  local command = docker_command .. "bundle exec rspec " .. docker_file .. "; exec zsh"
 
   open_split_terminal_with_auto_close(command)
 end
@@ -594,8 +572,8 @@ vim.api.nvim_create_user_command("RunDbPostgres", function()
   run_db_postgres()
 end, {})
 
-vim.api.nvim_create_user_command("RunContainerBash", function()
-  run_container_bash()
+vim.api.nvim_create_user_command("RunContainerZsh", function()
+  run_container_zsh()
 end, {})
 
 -- ============================================================================
@@ -621,7 +599,7 @@ map("n", "<leader>rdc", ":RunDbCreate<CR>", { noremap = true, silent = true, des
 map("n", "<leader>rdp", ":RunDbPostgres<CR>", { noremap = true, silent = true, desc = "Rails DB: Postgres console" })
 
 -- Container
-map("n", "<leader>rh", ":RunContainerBash<CR>", { noremap = true, silent = true, desc = "Docker: Container bash" })
+map("n", "<leader>rh", ":RunContainerZsh<CR>", { noremap = true, silent = true, desc = "Docker: Container zsh" })
 
 map("n", "<leader>th", "<cmd>ToggleTerm direction=horizontal<CR>", { noremap = true, silent = true, desc = "Terminal: Horizontal" })
 
