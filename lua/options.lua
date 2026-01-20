@@ -17,7 +17,7 @@ vim.opt.showbreak = "  "  -- Visual indicator for wrapped lines
 
 vim.wo.relativenumber = false
 
--- vim.o.autoread = true
+vim.o.autoread = true
 -- vim.o.updatetime = 1000
 
 vim.opt.termguicolors = true
@@ -25,7 +25,7 @@ vim.opt.list = true
 vim.opt.listchars = {
   space = "·",
   tab = "→ ",
-  trail = "•",
+  trail = "·",
   extends = "⟩",
   precedes = "⟨",
 }

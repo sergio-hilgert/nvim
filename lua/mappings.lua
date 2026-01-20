@@ -242,10 +242,23 @@ end
 local function open_split_terminal_with_auto_close(command)
   print(command)
   local Terminal = require("toggleterm.terminal").Terminal
+  -- Save the current window to return focus after opening terminal
+  local current_win = vim.api.nvim_get_current_win()
+  
   local term = Terminal:new({
     cmd = command,
     direction = "horizontal",
     close_on_exit = true,
+    auto_scroll = false,  -- Disable auto_scroll to prevent focus stealing
+    on_open = function(t)
+      -- Return focus to the original window after terminal opens
+      vim.schedule(function()
+        if vim.api.nvim_win_is_valid(current_win) then
+          vim.api.nvim_set_current_win(current_win)
+          vim.cmd("stopinsert")
+        end
+      end)
+    end,
     on_exit = function()
       vim.schedule(function()
         vim.cmd("stopinsert")
