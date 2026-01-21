@@ -24,6 +24,7 @@ A powerful, feature-rich Neovim configuration built on top of [NvChad](https://n
   - [LSP (Language Server Protocol)](#lsp-language-server-protocol)
   - [Snacks Plugin](#snacks-plugin)
   - [Avante AI Assistant](#avante-ai-assistant)
+  - [Completion](#completion)
 - [Plugin Overview](#plugin-overview)
 - [Customization](#customization)
 - [Troubleshooting](#troubleshooting)
@@ -429,6 +430,12 @@ Avante provides AI-powered coding assistance using Claude or OpenAI.
 | `<Ctrl>l` | Normal | Move to right window |
 | `<leader>sv` | Normal | Split vertical |
 | `<leader>sh` | Normal | Split horizontal |
+
+### Completion
+
+| Keybinding | Mode | Description |
+|------------|------|-------------|
+| `<leader>cp` | Normal/Insert | Toggle autocomplete on/off |
 
 ### Comments
 

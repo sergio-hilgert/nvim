@@ -4,17 +4,43 @@ return {
     opts = function(_, opts)
       local cmp = require("cmp")
 
+      -- Global variable to track autocomplete state (true = enabled)
+      vim.g.cmp_autocomplete_enabled = true
+
+      -- Function to toggle autocomplete (exposed globally for mappings.lua)
+      _G.toggle_cmp_autocomplete = function()
+        vim.g.cmp_autocomplete_enabled = not vim.g.cmp_autocomplete_enabled
+        if vim.g.cmp_autocomplete_enabled then
+          cmp.setup({
+            completion = {
+              autocomplete = { cmp.TriggerEvent.TextChanged },
+            },
+          })
+          vim.notify("Autocomplete: ON", vim.log.levels.INFO)
+        else
+          cmp.setup({
+            completion = {
+              autocomplete = false,
+            },
+          })
+          vim.notify("Autocomplete: OFF", vim.log.levels.INFO)
+        end
+      end
+
+      -- Create the toggle command
+      vim.api.nvim_create_user_command("ToggleAutocomplete", _G.toggle_cmp_autocomplete, {})
+
       -- Make completion less aggressive
       opts.completion = {
-        -- Only show completion after typing 3 characters
         keyword_length = 3,
+        autocomplete = { cmp.TriggerEvent.TextChanged },
       }
 
       -- Limit the completion window size
       opts.window = {
         completion = cmp.config.window.bordered({
-          max_height = 10,  -- Limit to 10 items visible
-          max_width = 50,   -- Limit width
+          max_height = 10,
+          max_width = 50,
         }),
         documentation = cmp.config.window.bordered({
           max_height = 15,
@@ -22,20 +48,11 @@ return {
         }),
       }
 
-      -- Add delay before showing completions (in milliseconds)
+      -- Add delay before showing completions
       opts.performance = {
-        debounce = 150,        -- Wait 150ms after typing before showing completions
-        throttle = 50,         -- Minimum time between completion updates
+        debounce = 150,
+        throttle = 50,
         fetching_timeout = 200,
-      }
-
-      -- Limit the number of items shown
-      opts.matching = {
-        disallow_fuzzy_matching = false,
-        disallow_fullfuzzy_matching = false,
-        disallow_partial_fuzzy_matching = false,
-        disallow_partial_matching = false,
-        disallow_prefix_unmatching = false,
       }
 
       -- Configure sources with lower priority and keyword length

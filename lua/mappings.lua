@@ -632,3 +632,13 @@ map("n", "<leader>td", function()
   lazydocker:toggle()
 end, { desc = "Docker: LazyDocker" })
 
+-- ============================================================================
+-- Completion Toggle
+-- ============================================================================
+map({ "n", "i" }, "<leader>cp", function()
+  if _G.toggle_cmp_autocomplete then
+    _G.toggle_cmp_autocomplete()
+  else
+    vim.notify("Autocomplete toggle not available yet", vim.log.levels.WARN)
+  end
+end, { desc = "Completion: Toggle autocomplete" })
