@@ -2,6 +2,15 @@ local M = {}
 
 M.opts = {
   lsp = {
+    -- Disable signature help from noice (disabled it in NvChad too)
+    signature = {
+      enabled = false,
+    },
+    -- Disable hover from noice to prevent focus stealing
+    hover = {
+      enabled = true,
+      silent = true,  -- Don't show "No information available" messages
+    },
     override = {
       ["vim.lsp.util.convert_input_to_markdown_lines"] = true,
       ["vim.lsp.util.stylize_markdown"] = true,
@@ -12,6 +21,26 @@ M.opts = {
   -- Put Noice command line UI in the middle of the screen
   cmdline = {
     view = "cmdline_popup",
+  },
+
+  -- Disable some messages that can be annoying
+  routes = {
+    -- Hide "No information available" messages
+    {
+      filter = {
+        event = "notify",
+        find = "No information available",
+      },
+      opts = { skip = true },
+    },
+    -- Hide "no signature help available" messages
+    {
+      filter = {
+        event = "notify",
+        find = "no signature help",
+      },
+      opts = { skip = true },
+    },
   },
 }
 

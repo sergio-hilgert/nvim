@@ -6,18 +6,22 @@
 local M = {}
 
 M.base46 = {
-	theme = "github_dark",
+  theme = "github_dark",
 
-	-- hl_override = {
-	-- 	Comment = { italic = true },
-	-- 	["@comment"] = { italic = true },
-	-- },
+  -- hl_override = {
+  --   Comment = { italic = true },
+  --   ["@comment"] = { italic = true },
+  -- },
+}
+
+-- Disable LSP signature help popup (can be annoying while typing)
+M.lsp = {
+  signature = false,
 }
 
 -- M.nvdash = { load_on_startup = true }
 M.ui = {
   telescope = { style = "bordered" }
 }
---
 
 return M
