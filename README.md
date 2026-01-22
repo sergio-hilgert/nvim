@@ -412,13 +412,24 @@ Neovim has different modes for different tasks:
 
 Avante provides AI-powered coding assistance using Claude or OpenAI.
 
-| Keybinding | Mode | Description |
-|------------|------|-------------|
-| `<leader>aa` | Normal/Visual | Open Avante chat |
-| `<leader>ae` | Visual | Edit with AI |
-| `<leader>ar` | Normal | Refresh Avante |
-| `<leader>af` | Normal | Focus Avante |
-| `<leader>at` | Normal | Toggle Avante |
+
+| Keybinding | Description |
+|------------|-------------|
+| `<leader>aa` | Show/open Avante sidebar |
+| `<leader>at` | Toggle Avante sidebar visibility |
+| `<leader>ar` | Refresh Avante sidebar |
+| `<leader>af` | Switch Avante sidebar focus |
+| `<leader>ae` | Edit selected blocks |
+| `<leader>an` | New ask (start new conversation) |
+| `<leader>aS` | Stop current AI request |
+| `<leader>ah` | Select between chat histories |
+| `<leader>a?` | Select model |
+| `<leader>ad` | Toggle debug mode |
+| `<leader>as` | Toggle suggestion display |
+| `<leader>aR` | Toggle repomap |
+| `<leader>ac` | Add current buffer to selected files |
+| `<leader>aB` | Add all buffer files to selected files |
+
 
 ### Window Management
 

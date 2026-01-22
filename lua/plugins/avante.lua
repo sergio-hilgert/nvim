@@ -3,8 +3,16 @@ return {
   event = "VeryLazy",
   version = false, -- Never set this value to "*"! Never!
   opts = {
-    -- add any opts here
-    -- for example
+    suggestion = {
+      debounce = 1500,    -- increase debounce (ms) to reduce frequent updates
+    },
+    windows = {
+      chat = {
+        type = "split",
+        position = "right",
+        size = 40,
+      },
+    },
     provider = "claude",
     providers = {
       openai = {

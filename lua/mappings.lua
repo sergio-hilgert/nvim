@@ -460,7 +460,18 @@ local function run_container_zsh()
   local docker_command = "docker compose exec " .. project_name .. " "
   local command = docker_command .. "zsh"
 
-  open_split_terminal_with_auto_close(command)
+  -- Use a different terminal setup for interactive shells
+  local Terminal = require("toggleterm.terminal").Terminal
+  local term = Terminal:new({
+    cmd = command,
+    direction = "horizontal",
+    close_on_exit = true,
+    -- Keep focus on terminal for interactive use
+    on_open = function(t)
+      vim.cmd("startinsert")
+    end,
+  })
+  term:toggle()
 end
 
 local function run_db_create(migration_name)
@@ -631,6 +642,20 @@ map("n", "<leader>td", function()
   end
   lazydocker:toggle()
 end, { desc = "Docker: LazyDocker" })
+
+local btop = nil
+map("n", "<leader>tb", function()
+  if not btop then
+    local Terminal = require("toggleterm.terminal").Terminal
+    btop = Terminal:new({
+      cmd = "btop",
+      direction = "float",
+      hidden = true,
+      close_on_exit = true,
+    })
+  end
+  btop:toggle()
+end, { desc = "Btop: Show computer status" })
 
 -- ============================================================================
 -- Completion Toggle
