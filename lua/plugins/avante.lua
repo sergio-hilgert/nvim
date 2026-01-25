@@ -27,6 +27,7 @@ return {
         },
       },
       claude = {
+        api_key_name="ANTHROPIC_API_KEY",
         endpoint = "https://api.anthropic.com",
         model = "claude-opus-4-5-20251101",
         timeout = 30000, -- Timeout in milliseconds
