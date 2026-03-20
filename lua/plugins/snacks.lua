@@ -4,8 +4,8 @@ return {
   lazy = false,
   opts = {
     bigfile = { enabled = true },
-    gh = { enabled = true },
-    gitbrowse = { enabled = true },
+    gh = { enabled = true }, -- Lazy load on demand
+    gitbrowse = { enabled = true }, -- Lazy load on demand
     lazygit = { enabled = true },
     notifier = {
       enabled = true,
@@ -21,9 +21,9 @@ return {
     quickfile = { enabled = true },
     scope = { enabled = true },
     scratch = { enabled = true },
-    scroll = { enabled = true },
+    scroll = { enabled = true }, -- Disable smooth scroll to reduce input lag
     picker = { enabled = true },
-    words = { enabled = true },
+    words = { enabled = false }, -- Disable word highlighting to reduce lag
   },
 }
 

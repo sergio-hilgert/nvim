@@ -1,5 +1,11 @@
 return {
   "nvim-tree/nvim-tree.lua",
+  lazy = true,
+  cmd = { "NvimTreeToggle", "NvimTreeFocus", "NvimTreeFindFile", "NvimTreeOpen" },
+  keys = {
+    { "<C-n>", "<cmd>NvimTreeToggle<CR>", desc = "Toggle NvimTree" },
+    { "<leader>e", "<cmd>NvimTreeFocus<CR>", desc = "Focus NvimTree" },
+  },
   opts = {
     -- Sorting options
     sort = {
@@ -20,8 +26,8 @@ return {
     renderer = {
       group_empty = true, -- Compact folders that only contain a single folder
       highlight_git = "name", -- Highlight file names based on git status
-      highlight_opened_files = "name", -- Highlight names of opened files
-      highlight_modified = "name", -- Highlight names of modified files
+      highlight_opened_files = "none", -- Disable to improve performance
+      highlight_modified = "none", -- Disable to improve performance
       indent_markers = {
         enable = true, -- Show indent guide lines
       },
@@ -31,8 +37,8 @@ return {
           folder = true, -- Show folder icons
           folder_arrow = true, -- Show folder expand/collapse arrows
           git = true, -- Show git status icons
-          modified = true, -- Show modified indicator
-          diagnostics = true, -- Show diagnostic icons
+          modified = false, -- Disable for performance
+          diagnostics = false, -- Disable for performance
         },
       },
     },
@@ -42,22 +48,18 @@ return {
       enable = true, -- Enable git integration
       ignore = false, -- Do NOT ignore files listed in .gitignore
       show_on_dirs = true, -- Show git status on directories
-      show_on_open_dirs = true, -- Show git status on open directories
-      timeout = 500, -- Git command timeout in ms
+      show_on_open_dirs = false, -- Disable for performance
+      timeout = 400, -- Git command timeout in ms
     },
 
-    -- LSP diagnostics integration
+    -- LSP diagnostics integration - disabled for performance
     diagnostics = {
-      enable = true, -- Show LSP diagnostics in the tree
-      show_on_dirs = true, -- Show diagnostics on parent directories
-      show_on_open_dirs = true, -- Show diagnostics on open directories
+      enable = false, -- Disable LSP diagnostics in the tree for performance
     },
 
-    -- Modified files indicator
+    -- Modified files indicator - disabled for performance
     modified = {
-      enable = true, -- Show indicator for unsaved files
-      show_on_dirs = true, -- Show on directories with modified children
-      show_on_open_dirs = true, -- Show on open directories
+      enable = false, -- Disable for performance
     },
 
     -- File/folder filtering
@@ -89,10 +91,10 @@ return {
       },
     },
 
-    -- File system watchers for auto-refresh
+    -- File system watchers for auto-refresh - optimized
     filesystem_watchers = {
       enable = true, -- Enable file system watching
-      debounce_delay = 50, -- Delay before refreshing after changes
+      debounce_delay = 100, -- Increase delay for better performance
       ignore_dirs = { -- Directories to ignore for better performance
         "/.git",
         "/node_modules",
@@ -108,11 +110,11 @@ return {
       },
     },
 
-    -- Sync tree across tabs
+    -- Sync tree across tabs - disabled for performance
     tab = {
       sync = {
-        open = true, -- Open tree in new tabs if it was open
-        close = true, -- Close tree in all tabs when closed
+        open = false, -- Disable for performance
+        close = false, -- Disable for performance
       },
     },
   },

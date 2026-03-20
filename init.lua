@@ -61,15 +61,3 @@ vim.api.nvim_create_autocmd("FileType", {
     vim.bo.indentexpr = "GetRubyIndent()"
   end,
 })
-
--- ============================================================================
--- Terminal Autocommands
--- ============================================================================
-
--- vim.cmd([[
---   autocmd TermOpen * startinsert
--- ]])
---
--- vim.cmd([[
---   autocmd TermClose * quit
--- ]])

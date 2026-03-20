@@ -16,11 +16,24 @@ M.opts = {
       ["vim.lsp.util.stylize_markdown"] = true,
       ["cmp.entry.get_documentation"] = true,
     },
+    -- Disable progress to reduce overhead
+    progress = {
+      enabled = false,
+    },
   },
 
   -- Put Noice command line UI in the middle of the screen
   cmdline = {
     view = "cmdline_popup",
+  },
+
+  -- Disable presets that can cause performance issues
+  presets = {
+    bottom_search = false,
+    command_palette = false,
+    long_message_to_split = true,
+    inc_rename = false,
+    lsp_doc_border = false,
   },
 
   -- Disable some messages that can be annoying
@@ -41,7 +54,19 @@ M.opts = {
       },
       opts = { skip = true },
     },
+    -- Hide written messages
+    {
+      filter = {
+        event = "msg_show",
+        kind = "",
+        find = "written",
+      },
+      opts = { skip = true },
+    },
   },
+
+  -- Throttle to reduce CPU usage - increase for better performance
+  throttle = 1000 / 20, -- 20 fps (reduced from 30)
 }
 
 M.setup = function(opts)

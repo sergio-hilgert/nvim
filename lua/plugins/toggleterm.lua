@@ -1,8 +1,10 @@
 return {
   "akinsho/toggleterm.nvim",
   version = "*",
+  lazy = true,
   cmd = { "ToggleTerm", "ToggleTermToggleAll", "TermExec" },
   keys = {
+    { "<C-\\>", "<cmd>ToggleTerm<CR>", desc = "Toggle terminal", mode = { "n", "t" } },
     { "<leader>tf", "<cmd>ToggleTerm direction=float<CR>", desc = "Terminal: Float" },
     { "<leader>th", "<cmd>ToggleTerm direction=horizontal<CR>", desc = "Terminal: Horizontal" },
     { "<leader>tv", "<cmd>ToggleTerm direction=vertical<CR>", desc = "Terminal: Vertical" },
@@ -22,16 +24,15 @@ return {
         return vim.o.columns * 0.4
       end
     end,
-    open_mapping = [[<c-\>]],
+    -- Remove open_mapping since we handle it via keys
     hide_numbers = true,
-    shade_filetypes = {},
-    shade_terminals = true,
-    shading_factor = 2,
+    shade_terminals = false, -- Disable shading for better performance
+    shading_factor = 0,
     start_in_insert = true,
-    insert_mappings = true,
+    insert_mappings = false, -- Disable insert mappings, we handle via keys
     terminal_mappings = true,
-    persist_size = true,
-    persist_mode = true,
+    persist_size = false, -- Don't persist size for better performance
+    persist_mode = false, -- Don't persist mode
     direction = "float",
     close_on_exit = true,
     shell = vim.o.shell,
@@ -49,15 +50,13 @@ return {
     winbar = {
       enabled = false,
     },
-    -- Custom function to set terminal keymaps
+    -- Simplified on_open - only essential keymaps
     on_open = function(term)
-      -- Easy escape from terminal mode with Esc or jk
-      vim.keymap.set("t", "<Esc>", [[<C-\><C-n>]], { buffer = term.bufnr, desc = "Exit terminal mode" })
-      -- Navigate away from terminal while it's running
-      vim.keymap.set("t", "<C-h>", [[<C-\><C-n><C-w>h]], { buffer = term.bufnr, desc = "Move to left window" })
-      vim.keymap.set("t", "<C-j>", [[<C-\><C-n><C-w>j]], { buffer = term.bufnr, desc = "Move to bottom window" })
-      vim.keymap.set("t", "<C-k>", [[<C-\><C-n><C-w>k]], { buffer = term.bufnr, desc = "Move to top window" })
-      vim.keymap.set("t", "<C-l>", [[<C-\><C-n><C-w>l]], { buffer = term.bufnr, desc = "Move to right window" })
+      vim.keymap.set("t", "<Esc>", [[<C-\><C-n>]], { buffer = term.bufnr, noremap = true })
+      vim.keymap.set("t", "<C-h>", [[<C-\><C-n><C-w>h]], { buffer = term.bufnr, noremap = true })
+      vim.keymap.set("t", "<C-j>", [[<C-\><C-n><C-w>j]], { buffer = term.bufnr, noremap = true })
+      vim.keymap.set("t", "<C-k>", [[<C-\><C-n><C-w>k]], { buffer = term.bufnr, noremap = true })
+      vim.keymap.set("t", "<C-l>", [[<C-\><C-n><C-w>l]], { buffer = term.bufnr, noremap = true })
     end,
   },
 }
