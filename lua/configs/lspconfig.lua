@@ -13,7 +13,9 @@ local cwd = vim.loop.cwd()
 local servers = {
   terraformls = {},
   tflint = {},
-  terraform = {}
+  terraform = {},
+  ts_ls = {},
+  eslint = {},
 }
 
 -- Only enable ruby servers outside the scripts folder
