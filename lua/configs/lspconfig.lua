@@ -3,6 +3,25 @@ local nvlsp = require "nvchad.configs.lspconfig"
 
 nvlsp.defaults()
 
+-- 1. Force the capabilities table structure to exist so the assignment doesn't fail silently
+local caps = nvlsp.capabilities or vim.lsp.protocol.make_client_capabilities()
+caps.textDocument = caps.textDocument or {}
+caps.textDocument.completion = caps.textDocument.completion or {}
+caps.textDocument.completion.completionItem = caps.textDocument.completion.completionItem or {}
+
+-- 2. Hard-disable snippet support
+caps.textDocument.completion.completionItem.snippetSupport = false
+caps.textDocument.completion.completionItem.resolveSupport = {
+  properties = {
+    "documentation",
+    "detail",
+    "additionalTextEdits",
+  },
+}
+
+-- 3. Reassign the firmly modified capabilities back to nvlsp
+nvlsp.capabilities = caps
+
 -- Full path to the folder where Ruby LSPs should be disabled
 local scripts_dir = vim.fn.expand "~/dev/lia-boot/projects/scripts"
 

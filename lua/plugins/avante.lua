@@ -4,8 +4,8 @@ return {
   version = false, -- Never set this value to "*"! Never!
   opts = {
     suggestion = {
-      debounce = 1000,   -- Increased debounce (ms) to reduce frequent updates
-      throttle = 1000,   -- Added throttle to prevent rapid-fire API calls
+      debounce = 300,   -- Increased debounce (ms) to reduce frequent updates
+      --throttle = 1000,   -- Added throttle to prevent rapid-fire API calls
     },
     windows = {
       chat = {
@@ -60,15 +60,16 @@ return {
         },
       },
       gemini = {
-        --model = "gemini-3.1-pro-preview",
-        model = "gemini-3-flash-preview",
+        api_key_name = "GEMINI_API_KEY",
+        endpoint = "https://generativelanguage.googleapis.com/v1beta/models",
+        model = "gemini-2.0-flash", -- Use valid model name (gemini-2.0-flash, gemini-1.5-pro, gemini-1.5-flash)
         timeout = 30000, -- Timeout in milliseconds
-        context_window = 1000000, -- 1M token context window
-        disable_tools = true,
+        disable_tools = true, -- Disable tools to prevent infinite tool-calling loops
+        use_ReAct_prompt = false, -- Disable ReAct prompt to prevent loops
         extra_request_body = {
           generationConfig = {
             temperature = 0.2,
-            maxOutputTokens = 64000, -- 64k maximum output limit for Gemini 3.1 Pro
+            maxOutputTokens = 8192, -- Reasonable output limit
           },
         },
       },
@@ -107,23 +108,23 @@ return {
     -- "folke/snacks.nvim", -- for input provider snacks
     --- The below dependencies are optional,
     -- "echasnovski/mini.pick", -- for file_selector provider mini.pick
-    {
-      -- support for image pasting
-      "HakonHarnes/img-clip.nvim",
-      event = "VeryLazy",
-      opts = {
-        -- recommended settings
-        default = {
-          embed_image_as_base64 = false,
-          prompt_for_file_name = false,
-          drag_and_drop = {
-            insert_mode = true,
-          },
-          -- required for Windows users
-          use_absolute_path = true,
-        },
-      },
-    },
+    -- {
+    --   -- support for image pasting
+    --   "HakonHarnes/img-clip.nvim",
+    --   event = "VeryLazy",
+    --   opts = {
+    --     -- recommended settings
+    --     default = {
+    --       embed_image_as_base64 = false,
+    --       prompt_for_file_name = false,
+    --       drag_and_drop = {
+    --         insert_mode = true,
+    --       },
+    --       -- required for Windows users
+    --       use_absolute_path = true,
+    --     },
+    --   },
+    -- },
     {
       -- Make sure to set this up properly if you have lazy=true
       'MeanderingProgrammer/render-markdown.nvim',
