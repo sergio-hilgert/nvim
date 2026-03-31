@@ -36,3 +36,5 @@ vim.opt.smartcase = true
 vim.wo.foldmethod = "expr"
 vim.wo.foldexpr = "nvim_treesitter#foldexpr()"
 vim.wo.foldlevel = 99   -- open all folds by default
+vim.opt.timeoutlen = 300
+vim.opt.clipboard = "unnamedplus"
