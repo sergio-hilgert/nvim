@@ -15,35 +15,33 @@ return {
       },
     },
     behaviour = {
-      enable_fastapply = true,  -- Enable Fast Apply feature
+      enable_fastapply = false,  -- Enable Fast Apply feature
       auto_suggestions = false, -- Disabled to stop expensive background API requests
     },
     web_search_engine = {
       provider = "tavily", -- tavily, serpapi, google, kagi, brave, or searxng
       proxy = nil, -- proxy support, e.g., http://127.0.0.1:7890
     },
-    --provider = "claude-code",
-    provider = "claude",
-    -- {
-    --   acp_providers = {
-    --     -- ["gemini-cli"] = {
-    --     --   command = "gemini",
-    --     --   args = { "--experimental-acp" },
-    --     --   env = {
-    --     --     NODE_NO_WARNINGS = "1",
-    --     --     GEMINI_API_KEY = os.getenv("GEMINI_API_KEY"),
-    --     --   },
-    --     -- },
-    --     ["claude-code"] = {
-    --       command = "npx",
-    --       args = { "@zed-industries/claude-code-acp" },
-    --       env = {
-    --         NODE_NO_WARNINGS = "1",
-    --         ANTHROPIC_API_KEY = os.getenv("ANTHROPIC_API_KEY"),
-    --       },
-    --     },
-    --   },
-    -- },
+    provider = "claude-code",
+    acp_providers = {
+      -- ["gemini-cli"] = {
+      --   command = "gemini",
+      --   args = { "--experimental-acp" },
+      --   env = {
+      --     NODE_NO_WARNINGS = "1",
+      --     GEMINI_API_KEY = os.getenv("GEMINI_API_KEY"),
+      --   },
+      -- },
+      ["claude-code"] = {
+        command = "npx",
+        args = { "-y", "@zed-industries/claude-code-acp" },
+        env = {
+          NODE_NO_WARNINGS = "1",
+          ANTHROPIC_API_KEY = os.getenv("ANTHROPIC_API_KEY"),
+          ANTHROPIC_MODEL = "claude-sonnet-4-6",
+        },
+      },
+    },
     providers = {
       morph = {
         model = "auto",
@@ -76,12 +74,12 @@ return {
       claude = {
         api_key_name="ANTHROPIC_API_KEY",
         endpoint = "https://api.anthropic.com",
-        model = "claude-opus-4-5-20251101",
+        model = "claude-opus-4-7",
         timeout = 30000, -- Timeout in milliseconds
         context_window = 200000,
         support_prompt_caching = true, -- Enabled caching for system prompts and history
         extra_request_body = {
-          temperature = 0.45,
+          temperature = 0.35,
           max_tokens = 4096, -- Capped output tokens to prevent budget drain
         },
       },
