@@ -1,7 +1,7 @@
 return {
   "yetone/avante.nvim",
   event = "VeryLazy",
-  version = false, -- Never set this value to "*"! Never!
+  tag = "v0.0.28", -- pin stable release (v0.0.28 fixes vim.text.diff nil crash + adds acp_providers)
   opts = {
     suggestion = {
       debounce = 300,   -- Increased debounce (ms) to reduce frequent updates
